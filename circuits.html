@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Circuitos Turísticos | Sarañani Tours</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* --- ESTILOS GENERALES --- */
+    :root {
+      --color-primary: #DC143C;    /* Rojo Carmesí */
+      --color-secondary: #00CED1;  /* Turquesa */
+      --color-bg: #1a1a1a;         /* Fondo Oscuro */
+      --color-bg-accent: #2d2d2d;  /* Fondo Tarjetas */
+      --color-text: #f0f0f0;
+      --color-white: #ffffff;
+      --font-main: 'Outfit', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: var(--font-main);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+    }
+
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      background: rgba(26, 26, 26, 0.95);
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a:hover { color: var(--color-secondary); }
+
+    /* --- HERO DE LA PÁGINA --- */
+    .page-header {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1534234828569-1f27264769cc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      padding: 5rem 0;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 3rem;
+      color: var(--color-white);
+      margin-bottom: 1rem;
+    }
+
+    /* --- GRID DE TARJETAS --- */
+    .circuits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding-bottom: 4rem;
+    }
+
+    .circuit-card {
+      background: var(--color-bg-accent);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .circuit-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--color-secondary);
+    }
+
+    .card-image-wrapper {
+      height: 250px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .tag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--color-primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    /* --- EL EFECTO DE "INFORMACIÓN" (OVERLAY) --- */
+    .card-overlay {
+      position: absolute;
+      bottom: -100%; /* Oculto abajo */
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      transition: bottom 0.4s ease-in-out;
+      backdrop-filter: blur(5px);
+    }
+
+    /* Esta clase se activa con JS */
+    .circuit-card.active .card-overlay {
+      bottom: 0;
+    }
+
+    .overlay-text {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .overlay-details {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 1.5rem;
+      color: var(--color-secondary);
+      font-size: 0.9rem;
+    }
+
+    .btn-details {
+      padding: 10px 25px;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-details:hover {
+      background: white;
+      color: var(--color-primary);
+    }
+
+    .card-content {
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .card-content h3 {
+      color: var(--color-white);
+      margin-bottom: 0.5rem;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--color-secondary);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .nav-links { display: none; } /* Menú simple para esta página */
+      .page-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="contact-info">
+        <span><i class="fas fa-phone"></i> +591 </span>
+        <span><i class="fas fa-envelope"></i> info@sarananitours.com</span>
+        <span class="hide-mobile"><i class="fas fa-map-marker-alt"></i> La Paz, Bolivia</span>
+      </div>
+      <div class="social-mini">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">
+        <img src="/logo.png" alt="Sarañani Tours Logo" />
+        <span>Sarañani</span>
+      </a>
+      <button class="mobile-menu-btn" aria-label="Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="circuits.html">Circuitos</a></li> <li><a href="#destinos">Destinos</a></li>
+        <li><a href="sumergete.html">360°</a></li>
+        <li><a href="about.html">Nosotros</a></li>
+        <li><a href="login.html" class="nav-login-btn">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <header class="page-header">
+    <div class="container">
+      <h1 class="page-title">Nuestros Destinos</h1>
+      <p>Toca cualquier tarjeta para ver el itinerario y precios.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="circuits-grid">
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1518182170546-0766bcad9e36?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Uyuni" class="card-img">
+          <span class="tag">Popular</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Visita el Salar, Cementerio de Trenes, Isla Incahuasi y Lagunas de Colores.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> 3 Días</span>
+              <span><i class="fas fa-wallet"></i> $150 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Salar de Uyuni</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cholets" class="card-img">
+          <span class="tag">Cultural</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Arquitectura Neo-Andina, visita interiores de lujo y conoce al creador Freddy Mamani.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> 1 Día</span>
+              <span><i class="fas fa-wallet"></i> $40 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Ruta Cholets</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1560701608-074782cb095d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Titicaca" class="card-img">
+          <span class="tag">Místico</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Navegación en bote privado, caminata Isla del Sol y Basílica de Copacabana.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> 2 Días</span>
+              <span><i class="fas fa-wallet"></i> $90 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Lago Titicaca</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1592851756250-20914f42e0f7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Toro Toro" class="card-img">
+          <span class="tag">Aventura</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Trekking, huellas de dinosaurios, Caverna de Umajalanta y Cañón del Vergel.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> 3 Días</span>
+              <span><i class="fas fa-wallet"></i> $120 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Parque Toro Toro</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1440659742441-703241f09f6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Madidi" class="card-img">
+          <span class="tag">Selva</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Expedición en la selva, avistamiento de caimanes, monos y delfines rosados.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> 4 Días</span>
+              <span><i class="fas fa-wallet"></i> $200 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Amazonía Madidi</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+      <div class="circuit-card" onclick="toggleCard(this)">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1528212306114-3925c2a4e091?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tiwanaku" class="card-img">
+          <span class="tag">Historia</span>
+          
+          <div class="card-overlay">
+            <p class="overlay-text">Museos, Pirámide de Akapana, Templo de Kalasasaya y Puerta del Sol.</p>
+            <div class="overlay-details">
+              <span><i class="fas fa-clock"></i> Full Day</span>
+              <span><i class="fas fa-wallet"></i> $50 USD</span>
+            </div>
+            <button class="btn-details">Ver Detalles Completos</button>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Ruinas de Tiwanaku</h3>
+          <p class="hint"><i class="fas fa-hand-pointer"></i> Toca para info</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function toggleCard(element) {
+      // 1. Si la tarjeta actual ya está abierta, la cerramos
+      if (element.classList.contains('active')) {
+        element.classList.remove('active');
+      } else {
+        // 2. Cerramos todas las demás tarjetas primero
+        document.querySelectorAll('.circuit-card').forEach(card => {
+          card.classList.remove('active');
+        });
+        // 3. Abrimos la tarjeta que se clickeó
+        element.classList.add('active');
+      }
+    }
+  </script>
+
+</body>
+</html>
